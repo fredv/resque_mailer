@@ -42,6 +42,9 @@ module Resque
       end
 
       def perform(action, *args)
+        if defined?(ActiveRecord)
+          ActiveRecord::Base.verify_active_connections!
+        end
         self.send(:new, action, *args).message.deliver!
       end
 
